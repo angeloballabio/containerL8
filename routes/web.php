@@ -14,6 +14,7 @@ use App\Http\Livewire\Resa;
 use App\Http\Livewire\GeneraDistinta;
 use App\Http\Controllers\Mandati;
 use App\Http\Controllers\Bollettino;
+use App\Http\Controllers\StampaDistinta;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,4 +49,5 @@ Route::get('/mandati/pdf/{id}', [Mandati::class, 'stampaPdf'])->name('mandati.pd
 Route::get('/bollettino/{id}', [Bollettino::class, 'index'])->name('bollettino');
 Route::get('/bollettino/pdf/{id}', [Bollettino::class, 'stampaPdf'])->name('bollettino.pdf');
 Route::get('/genera_distinta/{id}', GeneraDistinta::class)->name('genera.distinta');
-
+Route::get('/stampa_distinta/{id}', [StampaDistinta::class, 'index'])->name('stampa.distinta');
+Route::get('/distinta/pdf/{id}', [StampaDistinta::class, 'stampaPdf'])->name('distinta.pdf');

@@ -306,9 +306,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pezzi as $pezzo)
+
+                        @foreach($n_pezzi as $pezzo)
                         <tr>
-                            @if ($selezionato == $pezzo->id)
+                            @if ($selezionato_p == $pezzo->id)
                             <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})" >{{ $pezzo->pezzi }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->colli }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->lordo }}</td>
@@ -327,15 +328,62 @@
                         @endforeach
                     </tbody>
                 </table>
-                {{ $pezzi->links() }}
-
+                {{-- {{ $pezzi->links() }} --}}
+                <div class="flex  w-full mt-3">
+                    {{-- <div class="col-12 d-flex justify-content-around" style="background-color: lightgrey"> --}}
+                    <button type="button"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 w-1/5"  wire:click='aggiungi_p'>Aggiungi</button>
+                    <button type="button"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 w-1/5"  wire:click='modifica_p'>Modifica</button>
+                    <button type="button"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 w-1/5"  wire:click='cancella_p'>Cancella</button>
+                    <button type="button"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 w-1/5"  wire:click='sposta_p'>Sposta</button>
+                    <button type="button"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 w-1/5"  wire:click='ricarica_p'>Ricarica</button>
+                </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger col-12" role="alert">
+                        Mancano alcuni dati indispensabili correggi
+                    </div>
+                @endif
+                <div class="w-full shadow p-2 mb-2 bg-gray-300 rounded">
+                        <div class="grid grid-cols-2 gap-x-0  ml-40">
+                            <div class="w-1/2 ">
+                                    <label for="pezzi" class="w-full">Pezzi :</label>
+                                    <input type="text" class="w-full" style="height: 20px" wire:model="pezzi" value="{{ old('pezzi') }}">
+                                    @error('pezzi') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
+                            </div>
+                            <div class="w-1/2">
+                                    <label for="colli" class="w-full">Colli :</label>
+                                    <input type="text" class="w-full" style="height: 20px" wire:model="colli" value="{{ old('colli') }}">
+                                    @error('colli') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
+                            </div>
+                            <div class="w-1/2">
+                                    <label for="lordo" class="w-full">Lordo :</label>
+                                    <input type="text" class="w-full" style="height: 20px" wire:model="lordo" value="{{ old('lordo') }}">
+                                    @error('lordo') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
+                            </div>
+                            <div class="w-1/2">
+                                <label for="netto" class="w-full">Netto :</label>
+                                <input type="text" class="w-full" style="height: 20px" wire:model="netto" value="{{ old('netto') }}">
+                                @error('netto') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
+                            </div>
+                            <div class="w-1/2">
+                                <label for="valore" class="w-full">valore :</label>
+                                <input type="text" class="w-full" style="height: 20px" wire:model="valore" value="{{ old('valore') }}">
+                                @error('valore') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
+                            </div>
+                            <div class="w-1/2">
+                                <label for="codice_articolo" class="w-full">Codice articolo:</label>
+                                <input type="text" class="w-full" style="height: 20px" wire:model="codice_articolo" value="{{ old('codice_articolo') }}">
+                                @error('codice_articolo') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-            <div class="w-1/2 border ">
+            <div class="w-full border ">
                 {{-- <livewire:dati-pezzi /> --}}
                 {{-- @livewire('dati-pezzi',['id' => $operazione->id]) --}}
-               {{--  @livewire('azioni-distinta',['id' => $operazione->id]) --}}
+                @livewire('azioni-distinta',['id' => $operazione->id])
                 {{-- <livewire:azioni-distinta /> --}}
                 </div>
             </div>
