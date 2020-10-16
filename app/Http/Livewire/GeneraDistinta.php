@@ -214,8 +214,8 @@ class GeneraDistinta extends Component
         $articolo->ordine_id = $this->ordine_id;
         $articolo->voce_doganale = $this->voce_doganale;
         $articolo->diritti_doganali = $this->diritti_doganali == null ? 0.00:$this->diritti_doganali;
-        $articolo->val_iva = $this->val_iva == null ? 0:$this->val_iva;
-        $articolo->aliquota_iva = $this->aliquota_iva == null ? 0:$this->aliquota_iva;
+        $articolo->val_iva = $this->val_iva == null ? 0.00:$this->val_iva;
+        $articolo->aliquota_iva = $this->aliquota_iva == null ? 0.0:$this->aliquota_iva;
         $articolo->acciaio = $this->acciaio == true ? '1':'0';
         $articolo->acciaio_inox = $this->acciaio_inox == true ? '1':'0';
         $articolo->plastica = $this->plastica == true ? '1':'0';
@@ -238,8 +238,8 @@ class GeneraDistinta extends Component
         $elenco_articolo->descrizione_it = $this->descrizione_it;
         $elenco_articolo->voce_doganale = $this->voce_doganale;
         $elenco_articolo->diritti_doganali = $this->diritti_doganali == null ? 0.00:$this->diritti_doganali;
-        $elenco_articolo->val_iva = $this->val_iva == null ? 0:$this->val_iva;
-        $elenco_articolo->aliquota_iva = $this->aliquota_iva == null ? 0:$this->aliquota_iva;
+        $elenco_articolo->val_iva = $this->val_iva == null ? 0.00:$this->val_iva;
+        $elenco_articolo->aliquota_iva = $this->aliquota_iva == null ? 0.0:$this->aliquota_iva;
         $elenco_articolo->acciaio = $this->acciaio == true ? '1':'0';
         $elenco_articolo->acciaio_inox = $this->acciaio_inox == true ? '1':'0';
         $elenco_articolo->plastica = $this->plastica == true ? '1':'0';
@@ -303,8 +303,8 @@ class GeneraDistinta extends Component
             $elenco_articolo->descrizione_it = $this->descrizione_it;
             $elenco_articolo->voce_doganale = $this->voce_doganale;
             $elenco_articolo->diritti_doganali = $this->diritti_doganali == null ? 0.00:$this->diritti_doganali;
-            $elenco_articolo->val_iva = $this->val_iva == null ? 0:$this->val_iva;
-            $elenco_articolo->aliquota_iva = $this->aliquota_iva == null ? 0:$this->aliquota_iva;
+            $elenco_articolo->val_iva = $this->val_iva == null ? 0.00:$this->val_iva;
+            $elenco_articolo->aliquota_iva = $this->aliquota_iva == null ? 0.0:$this->aliquota_iva;
             $elenco_articolo->acciaio = $this->acciaio == true ? '1':'0';
             $elenco_articolo->acciaio_inox = $this->acciaio_inox == true ? '1':'0';
             $elenco_articolo->plastica = $this->plastica == true ? '1':'0';
@@ -329,8 +329,8 @@ class GeneraDistinta extends Component
             $elenco_articolo->descrizione_it = $this->descrizione_it;
             $elenco_articolo->voce_doganale = $this->voce_doganale;
             $elenco_articolo->diritti_doganali = $this->diritti_doganali == null ? 0.00:$this->diritti_doganali;
-            $elenco_articolo->val_iva = $this->val_iva == null ? 0:$this->val_iva;
-            $elenco_articolo->aliquota_iva = $this->aliquota_iva == null ? 0:$this->aliquota_iva;
+            $elenco_articolo->val_iva = $this->val_iva == null ? 0.00:$this->val_iva;
+            $elenco_articolo->aliquota_iva = $this->aliquota_iva == null ? 0.0:$this->aliquota_iva;
             $elenco_articolo->acciaio = $this->acciaio == true ? '1':'0';
             $elenco_articolo->acciaio_inox = $this->acciaio_inox == true ? '1':'0';
             $elenco_articolo->plastica = $this->plastica == true ? '1':'0';

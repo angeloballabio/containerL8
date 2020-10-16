@@ -26,7 +26,7 @@ class CreateArticoliTable extends Migration
             $table->string('voce_doganale',12)->nullable();
             $table->decimal('diritti_doganali',13,3)->default(0.000);
             $table->decimal('val_iva',13,3)->default(0.000);
-            $table->decimal('aliquota_iva',2,1)->default(0.0);
+            $table->decimal('aliquota_iva',5,1)->default(0.0);
             $table->boolean('acciaio')->default(0);
             $table->boolean('acciaio_inox')->default(0);
             $table->boolean('plastica')->default(0);

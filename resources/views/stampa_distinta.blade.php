@@ -50,6 +50,10 @@
         </div>
     </div>
     <div class="container ml-80 mt-3">
+        <div class="inline-flex text-center mt-5">
+            <a href="/distinta/pdf/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1">Stampa</a>
+            <a href="/genera_distinta/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1">Termina</a>
+        </div>
         <table  style="width: 100%; border-collapse: collapse; border: 1px solid black; ">
             <thead>
                 <tr>
@@ -87,10 +91,40 @@
                 </tr>
             </tfoot>
         </table>
-        <div class="inline-flex text-center mt-5">
-        <a href="/distinta/pdf/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1">Stampa</a>
-        <a href="/genera_distinta/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1">Termina</a>
-        </div>
+    </div>
+    <hr class="mt-4">
+    <div class="container ml-80 mt-3">
+        <table  style="width: 100%; border-collapse: collapse; border: 1px solid black; ">
+            <thead>
+                <tr>
+                    <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Descrizione it</th>
+                    <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Voce doganale</th>
+                    <th style="border-collapse: collapse; border: 1px solid black; text-align: center; width: 80px;">Diritti doganali</th>
+                    <th style="border-collapse: collapse; border: 1px solid black; text-align: center; width: 80px;">Iva %</th>
+                    <th style="border-collapse: collapse; border: 1px solid black; text-align: center; width: 80px;">Iva valore</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($articoli as $articolo)
+                <tr>
+                    <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})" >{{ $articolo->descrizione_it }}</td>
+                    <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->voce_doganale }}</td>
+                    <td style="border-collapse: collapse; border: 1px solid black; text-align: right; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->diritti_doganali }}</td>
+                    <td style="border-collapse: collapse; border: 1px solid black; text-align: right;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->aliquota_iva }}</td>
+                    <td style="border-collapse: collapse; border: 1px solid black; text-align: right;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->val_iva }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td style="border-collapse: collapse; border: 1px solid black; text-align: center;"></td>
+                    <td style="border-collapse: collapse; border: 1px solid black; text-align: center;">Totali distinta :</td>
+                    <td  style="border-collapse: collapse; border: 1px solid black; text-align: center; width: 80px;">{{ $totale_diritti }}</td>
+                    <td style="border-collapse: collapse; border: 1px solid black; text-align: center; width: 80px;"></td>
+                    <td style="border-collapse: collapse; border: 1px solid black; text-align: center; width: 80px;">{{ $totale_iva }}</td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 </body>
 </html>
