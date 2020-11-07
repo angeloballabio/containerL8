@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 class DatiOperazione extends Component
 {
     public $ordine_id,$user;
-    public $fattura_nr, $data_fattura, $forn, $val, $compagnia_navale, $data_arrivo_nave, $nome_nave, $numero_obl, $container_nr, $cartoni, $lordo, $cubatura, $data_carico, $destinatario, $tipo_container, $sigillo, $trasportatore, $luogo_consegna, $pratica_nr, $data_pratica, $tot_diritti, $tot_iva, $sanitario, $nr_sanitari, $ce, $cites, $age, $dogana_t1, $allegati, $dogana_sdoganamento, $luogo_sdoganamento, $resa;
+    public $fattura_nr, $data_fattura, $forn, $val, $compagnia_navale, $data_arrivo_nave, $nome_nave, $numero_obl, $container_nr, $cartoni, $lordo, $cubatura, $data_carico, $destinatario, $tipo_container, $sigillo, $trasportatore, $luogo_consegna, $pratica_nr, $data_pratica, $tot_diritti, $tot_iva, $sanitario, $nr_sanitari = 0, $ce, $cites, $age, $dogana_t1, $allegati, $dogana_sdoganamento, $luogo_sdoganamento, $resa;
 
 
     protected $listeners = [

@@ -36,6 +36,11 @@ class AzioniDistinta extends Component
         return redirect(route('operazioni'));
     }
 
+    public function manuale()
+    {
+        return redirect(route('importa_fattura'));
+    }
+
     public function render()
     {
         return view('livewire.azioni-distinta');

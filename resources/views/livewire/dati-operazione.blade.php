@@ -11,7 +11,7 @@
 
             @error('data_fattura') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
             <label for="inputData" class="w-1/3">Data fattura</label>
-            <input type="date" class="w-2/3  border p-1"  style="height: 20px"id="inputData" wire:model="data_fattura">
+            <input type="date" class="w-2/3  border p-1"  style="height: 30px"id="inputData" wire:model="data_fattura">
         </div>
     </div>
     <div class="inline-flex w-full mb-1">
@@ -61,7 +61,7 @@
             <div class="w-1/3">
                 @error('data_arrivo_nave') <div class="ml-3"><span style="color: red;">{{ $message }}</span></div> @enderror
                 <label for="inputDataArrivo" class="w-1/3">Data arrivo:</label>
-                <input type="date" class="w-2/3 border p-1" style="height: 20px" id="inputDataArrivo"  wire:model="data_arrivo_nave">
+                <input type="date" class="w-2/3 border p-1" style="height: 30px" id="inputDataArrivo"  wire:model="data_arrivo_nave">
             </div>
         </div>
         <div class="inline-flex w-full mb-1">
@@ -87,7 +87,7 @@
             <div class="w-1/3">
                 @error('cartoni') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
                 <label for="inputCartoni" class="w-2/4">Numero cartoni :</label>
-                <input type="number" class="w-2/4 form-control p-1" style="height: 20px" id="inputCartoni" wire:model="cartoni">
+                <input type="number" class="w-2/4 border p-1" style="height: 20px" id="inputCartoni" wire:model="cartoni">
             </div>
             <div class="w-1/3">
                 @error('lordo') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
@@ -104,7 +104,7 @@
             <div class="w-1/3">
                 @error('data_carico') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
                 <label for="inputDataCarico" class="w-1/3">Data carico :</label>
-                <input type="date" class="w-2/3 border p-1" style="height: 20px" id="inputDataCarico" wire:model="data_carico">
+                <input type="date" class="w-2/3 border p-1" style="height: 30px" id="inputDataCarico" wire:model="data_carico">
             </div>
             <div class="w-2/3">
                 @error('destinatario') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
@@ -173,7 +173,7 @@
             <div class="w-1/3">
                 @error('data_pratica') <div class="ml-3"><span style="color: red">{{ $message }}</span></div> @enderror
                 <label for="inputDataPratica" class="w-1/2">Data pratica :</label>
-                <input type="date" class="w-1/2 border p-1" style="height: 20px" id="inputDataPratica" wire:model="data_pratica">
+                <input type="date" class="w-1/2 border p-1" style="height: 30px" id="inputDataPratica" wire:model="data_pratica">
 
             </div>
         </div>
