@@ -1,5 +1,5 @@
 <div>
-    <h1 class="text-center text-xl font-semibold>Genera distinta">Genera distinta</h1>
+    <h1 class="text-center text-xl font-semibold">Genera distinta</h1>
     <div>
         @if($operazione)
         <div class="shadow p-2 mb-2 bg-gray-200 rounded">

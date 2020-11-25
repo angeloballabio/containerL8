@@ -38,7 +38,12 @@ class AzioniDistinta extends Component
 
     public function manuale()
     {
-        return redirect(route('importa_fattura'));
+        $id = $this->ordine_id;
+        if($id)
+        {
+            return redirect(route('importa_fattura_manuale', compact('id')));
+        }
+
     }
 
     public function render()
