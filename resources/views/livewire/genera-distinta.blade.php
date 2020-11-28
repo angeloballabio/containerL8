@@ -328,7 +328,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                {{-- {{ $pezzi->links() }} --}}
+                {{ $n_pezzi->links() }}
                 <div class="flex  w-full mt-3">
                     {{-- <div class="col-12 d-flex justify-content-around" style="background-color: lightgrey"> --}}
                     <button type="button"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 w-1/5"  wire:click='aggiungi_p'>Aggiungi</button>

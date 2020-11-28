@@ -6,15 +6,21 @@ use Livewire\Component;
 use App\Models\FatturaData;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Support\Facades\DB;
+use Livewire\WithPagination;
+
 
 class ImportaFatturaManuale extends Component
 {
+    use WithPagination;
+
     public $ordine_id;
     public $articolo_id = 0, $selezionato=0;
     public $descrizione_uk, $descrizione_it, $pezzi, $colli, $peso_lordo, $peso_netto, $codice_prodotto, $unita_misura, $prezzo_unitario, $prezzo_totale, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites;
 
     protected $listeners = [
         'PSel' => 'articoloSelezionato',
+        'GSel' => 'gruppoSelezionato',
     ];
 
     protected $rules = [
@@ -77,17 +83,27 @@ class ImportaFatturaManuale extends Component
         }
     }
 
+    public function gruppoSelezionato($id)
+    {
+        $leggi_valori = FatturaData::select('it_descrizione','voce_doganale')->where('id','=',$id)->first();
+        $this->descrizione_it = $leggi_valori->it_descrizione;
+        $this->voce_doganale = $leggi_valori->voce_doganale;
+    }
+
     public function carica_fattura()
     {
         $text = '/home/angelo/Scrivania/fattura-tipo.xls';
-        $process = new Process(["python3", "/home/angelo/laravel/container/main.py",$text,$this->ordine_id]);
+        $process = new Process(["python3", "/home/angelo/laravel/container/resources/Python/main.py",$text,$this->ordine_id]);
         $process->run();
         while ($process->isRunning()) {
             // waiting for process to finish
         }
         #dd( $process->getOutput());
-        $articoli = FatturaData::paginate(19);
-        return view('livewire.importa-fattura-manuale', compact('articoli'))->layout('layouts.guest');
+        $articoli = FatturaData::paginate(19, ['*'], 'gruppi');
+        #SELECT it_descrizione, ANY_VALUE(id), ANY_VALUE(voce_doganale) FROM `fattura_data` GROUP BY it_descrizione
+        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->groupBy('it_descrizione')->paginate(19, ['*'], 'gruppi')->get()->all();
+        dd($gruppi);
+        return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
 
     }
 
@@ -151,7 +167,10 @@ class ImportaFatturaManuale extends Component
 
     public function render()
     {
-        $articoli = FatturaData::paginate(19);
-        return view('livewire.importa-fattura-manuale', compact('articoli'))->layout('layouts.guest');
+        $articoli = FatturaData::paginate(19, ['*'], 'articoli');
+        #$gruppi = FatturaData::select('id', 'it_descrizione', 'voce_doganale')->groupBy('id', 'it_descrizione', 'voce_doganale')->paginate(19);
+        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->groupBy('it_descrizione')->paginate(19, ['*'], 'gruppi'); #->get()->all();
+        #dd($articoli, $gruppi);
+        return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
     }
 }

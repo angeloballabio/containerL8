@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Operazione;
 use App\Models\Articoli;
 use App\Models\Pezzi;
@@ -11,6 +12,8 @@ use App\Models\ElencoArticoli;
 
 class GeneraDistinta extends Component
 {
+
+    use WithPagination;
 
     public $ordine_id = 0;
     public $articolo_id = 0, $pezzo_id = 0, $selezionato=0, $selezionato_p=0;
@@ -163,8 +166,8 @@ class GeneraDistinta extends Component
         $this->valore = null;
         $this->codice_articolo = null;
         $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
-        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->paginate(19);
-        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->paginate(19);
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->paginate(11);
+        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->paginate(11);
         return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
 
     }
@@ -195,8 +198,8 @@ class GeneraDistinta extends Component
     {
 
         $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
-        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->paginate(19);
-        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->paginate(19);
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->paginate(11);
+        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->paginate(11);
         return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
     }
 
