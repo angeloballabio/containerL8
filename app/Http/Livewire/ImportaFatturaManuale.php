@@ -47,10 +47,8 @@ class ImportaFatturaManuale extends Component
     }
 
     public function articoloSelezionato($articoloId){
-        $this->articolo_id = $articoloId;
-        $this->selezionato = $articoloId;
 
-        $articolo = FatturaData::where('id',$this->articolo_id)->get()->first();
+        $articolo = FatturaData::where('id',$articoloId)->get()->first();
         if($articolo){
             $this->descrizione_uk = $articolo->uk_descrizione;
             $this->descrizione_it = $articolo->it_descrizione;

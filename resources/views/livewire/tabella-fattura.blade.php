@@ -7,7 +7,7 @@
                 <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Codice articolo</th>
                 <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Colli</th>
                 <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Pezzi</th>
-                <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Um. Mis.</th>
+                <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Un. Mis.</th>
                 <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Val. unitario</th>
                 <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Lordo Kg.</th>
                 <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Netto Kg.</th>
@@ -27,7 +27,7 @@
                 <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->prezzo_unitario }}</td>
                 <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->peso_lordo }}</td>
                 <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->peso_netto }}</td>
-                <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->prezzo_totale }}</td>
+                <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->prezzo_totale }}</td>
                 @else
                 <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->uk_descrizione }}</td>
                 <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->it_descrizione }}</td>
