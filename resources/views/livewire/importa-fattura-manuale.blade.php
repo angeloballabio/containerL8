@@ -3,10 +3,79 @@
     <div>
         <div class='inline-flex w-full'>
             <div class="w-5/6">
-                @livewire('tabella-fattura')
+                {{-- @livewire('tabella-fattura') --}}
+                <table   style="width: 100%; border-collapse: collapse; border: 1px solid black; ">
+                    <thead>
+                        <tr>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Descrizione Uk</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Descrizione It</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Codice articolo</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Colli</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Pezzi</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Un. Mis.</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Val. unitario</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Lordo Kg.</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Netto Kg.</th>
+                            <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Valore</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($articoli as $articolo)
+                        <tr>
+                            @if ($selezionato == $articolo->id)
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->uk_descrizione }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->it_descrizione }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->codice_prodotto }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->colli }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->pezzi }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->unita_misura }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->prezzo_unitario }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->peso_lordo }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->peso_netto }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->prezzo_totale }}</td>
+                            @else
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->uk_descrizione }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->it_descrizione }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->codice_prodotto }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->colli }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->pezzi }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->unita_misura }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->prezzo_unitario }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->peso_lordo }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->peso_netto }}</td>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->prezzo_totale }}</td>
+                            @endif
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <span>Dall'articolo {{ $articoli_skip }} fino all'articolo {{ $articoli_take + $articoli_skip  }}</span><br>
+                <button  type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='diminuisci_articoli'>Precedente</button> <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click="aumenta_articoli">Prossimo</button>
+
+
+
             </div>
             <div class=" w-1/6">
-                @livewire('tabella-gruppi')
+               {{--  @livewire('tabella-gruppi') --}}
+               <table   style="width: 100%; border-collapse: collapse; border: 1px solid black; ">
+                <thead>
+                    <tr>
+                        <th style="border-collapse: collapse; border: 1px solid black; text-align: center;">Gruppi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($gruppi as $gruppo)
+                        <tr>
+                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('GSel',{{ $gruppo->id }})" >{{ $gruppo->it_descrizione }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            {{-- {{ $gruppi->appends(['articoli' => $articoli->currentPage()])->links() }} --}}
+            <span>Dall'articolo {{ $magazzino_skip }} fino all'articolo {{ $magazzino_take + $magazzino_skip  }}</span><br>
+            <button  type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='diminuisci_magazzino'>Precedente</button> <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click="aumenta_magazzino">Prossimo</button>
+
             </div>
         </div>
         <div class="inline-flex w-full mt-4 bg-gray-300 rounded">

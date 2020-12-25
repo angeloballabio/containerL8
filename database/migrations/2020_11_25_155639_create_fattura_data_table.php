@@ -45,6 +45,7 @@ class CreateFatturaDataTable extends Migration
             $table->boolean('richiede_cites')->default(0);
             $table->string('fornitore',40)->nullable();
             $table->bigInteger('operazione')->default(0);
+            $table->bigInteger('fornitore_id')->default(0);
             $table->timestamps();
         });
     }
