@@ -50,7 +50,7 @@
                     </tbody>
                 </table>
 
-                <span>Dall'articolo {{ $articoli_skip }} fino all'articolo {{ $articoli_take + $articoli_skip  }}</span><br>
+                <span>Da {{ $articoli_skip + 1 }} a {{ $articoli_take + $articoli_skip  }} di {{ $articoli_count }}</span><br>
                 <button  type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='diminuisci_articoli'>Precedente</button> <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click="aumenta_articoli">Prossimo</button>
 
 
@@ -73,7 +73,7 @@
                 </tbody>
             </table>
             {{-- {{ $gruppi->appends(['articoli' => $articoli->currentPage()])->links() }} --}}
-            <span>Dall'articolo {{ $magazzino_skip }} fino all'articolo {{ $magazzino_take + $magazzino_skip  }}</span><br>
+            <span>Da {{ $magazzino_skip + 1}} a {{ $magazzino_take + $magazzino_skip  }} di {{ $magazzino_count }}</span><br>
             <button  type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='diminuisci_magazzino'>Precedente</button> <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click="aumenta_magazzino">Prossimo</button>
 
             </div>

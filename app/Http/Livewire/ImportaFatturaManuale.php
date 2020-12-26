@@ -17,7 +17,7 @@ class ImportaFatturaManuale extends Component
     use WithPagination;
 
     public $ordine_id;
-    public $articolo_id = 0, $selezionato=0, $articoli_take=19, $articoli_skip=0,$magazzino_take=19, $magazzino_skip=0  ;
+    public $articolo_id = 0, $selezionato=0, $articoli_take=19, $articoli_skip=0,$magazzino_take=19, $magazzino_skip=0, $articoli_count, $magazzino_count  ;
     public $descrizione_uk, $descrizione_it, $pezzi, $colli, $peso_lordo, $peso_netto, $codice_prodotto, $unita_misura, $prezzo_unitario, $prezzo_totale, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites;
     public $PageArticoli, $PageGruppi;
 
@@ -99,9 +99,10 @@ class ImportaFatturaManuale extends Component
 
     public function diminuisci_articoli()
     {
-        if($this->articoli_skip > 19)
+
+        if($this->articoli_skip > 0)
         {
-            $this->articoli_skip = $this->articoli_skip - (19+1);
+            $this->articoli_skip = $this->articoli_skip - 19;
             $this->articoli_take = 19;
         }
         $articoli = FatturaData::where('operazione','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
@@ -117,15 +118,21 @@ class ImportaFatturaManuale extends Component
 
     public function aumenta_articoli() {
         $articoli = FatturaData::where('operazione','=',$this->ordine_id)->get();
-        $articoli_count = $articoli->count();
-        if($this->articoli_skip < $articoli_count)
+        $this->articoli_count = $articoli->count();
+        if($this->articoli_skip < $this->articoli_count)
         {
-            $this->articoli_skip = $this->articoli_skip + 19+1;
+            $this->articoli_skip = $this->articoli_skip + 19;
+            if ($this->articoli_skip + $this->articoli_take > $this->articoli_count) {
+                $this->articoli_take = $this->articoli_count - $this->articoli_skip;
+                if($this->articoli_take < 0)
+                {
+                    $this->articoli_skip = $this->articoli_skip - 19;
+                    $this->articoli_take = $this->articoli_count - $this->articoli_skip;
+                }
+
+            }
         }
-        if($this->articoli_take + $this->articoli_skip > $articoli_count)
-        {
-            $this->articoli_take = $articoli_count - $this->articoli_skip;
-        }
+
         $articoli = FatturaData::where('operazione','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
         /*
             query di esempio
@@ -138,11 +145,9 @@ class ImportaFatturaManuale extends Component
 
     public function diminuisci_magazzino()
     {
-        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->get();
-        $magazzino_count = $gruppi->count();
-        if($this->magazzino_skip > 19)
+        if($this->magazzino_skip > 0)
         {
-            $this->magazzino_skip = $this->magazzino_skip - (19+1);
+            $this->magazzino_skip = $this->magazzino_skip - 19;
             $this->magazzino_take = 19;
         }
         $articoli = FatturaData::where('operazione','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
@@ -158,21 +163,25 @@ class ImportaFatturaManuale extends Component
 
     public function aumenta_magazzino() {
         $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->get();
-        $magazzino_count = $gruppi->count();
-        if($this->magazzino_skip < $magazzino_count)
+        $this->magazzino_count = $gruppi->count();
+        if($this->magazzino_skip < $this->magazzino_count)
         {
-            $this->magazzino_skip = $this->magazzino_skip + 19+1;
-        }
-        if($this->magazzino_take + $this->magazzino_skip > $magazzino_count)
-        {
-            $this->magazzino_take = $magazzino_count - $this->magazzino_skip;
+            $this->magazzino_skip = $this->magazzino_skip + 19;
+            if ($this->magazzino_skip + $this->magazzino_take > $this->magazzino_count) {
+                $this->magazzino_take = $this->magazzino_count - $this->magazzino_skip;
+                if($this->magazzino_take < 0)
+                {
+                    $this->magazzino_skip = $this->magazzino_skip - 19;
+                    $this->magazzino_take = $this->magazzino_count- $this->magazzino_skip;
+                }
+
+            }
         }
         $articoli = FatturaData::where('operazione','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
         /*
             query di esempio
             SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
         */
-        /* $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->paginate(19); */
         $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->skip($this->magazzino_skip)->take($this->magazzino_take)->get();
         return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
     }
@@ -186,13 +195,15 @@ class ImportaFatturaManuale extends Component
         while ($process->isRunning()) {
             // waiting for process to finish
         }
-
+        $articoli = FatturaData::where('operazione','=',$this->ordine_id)->get();
+        $this->articoli_count = $articoli->count();
+        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->get();
+        $this->magazzino_count = $gruppi->count();
         $articoli = FatturaData::where('operazione','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
         /*
             query di esempio
             SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
         */
-        /* $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->paginate(19); */
         $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->skip($this->magazzino_skip)->take($this->magazzino_take)->get();
         return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
 
@@ -202,7 +213,6 @@ class ImportaFatturaManuale extends Component
     {
         $id = $this->ordine_id;
         return redirect(route('genera.distinta', compact('id')));
-
     }
 
     public function modifica_fattura()
@@ -259,13 +269,16 @@ class ImportaFatturaManuale extends Component
     public function render()
     {
         #dd(self::$ordine_id);
+        $articoli = FatturaData::where('operazione','=',$this->ordine_id)->get();
+        $this->articoli_count = $articoli->count();
+        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->get();
+        $this->magazzino_count = $gruppi->count();
         $articoli = FatturaData::where('operazione','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
 
         /*
             query di esempio
             SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
         */
-        /* $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->paginate(19); */
         $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->skip($this->magazzino_skip)->take($this->magazzino_take)->get();
         return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
     }
