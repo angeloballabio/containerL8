@@ -18,7 +18,7 @@ class GeneraDistinta extends Component
     public $ordine_id = 0;
     public $articolo_id = 0, $pezzo_id = 0, $selezionato=0, $selezionato_p=0;
     public $totale_colli, $totale_pezzi, $totale_lordo, $totale_netto, $totale_valore;
-    public $descrizione_uk, $descrizione_it, $tot_pezzi, $tot_colli, $tot_lordo, $tot_netto, $tot_valore, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites,$fornitore_id, $codicearticolo, $trovatoarticolo, $sposta_articolo;
+    public $descrizione_uk, $descrizione_it, $tot_pezzi, $tot_colli, $tot_lordo, $tot_netto, $tot_valore, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites, $fornitore_id, $codicearticolo, $trovatoarticolo, $sposta_articolo;
     public $pezzi, $colli, $lordo, $netto, $valore, $codice_articolo;
 
 
@@ -165,10 +165,11 @@ class GeneraDistinta extends Component
         $this->netto = null;
         $this->valore = null;
         $this->codice_articolo = null;
+        $f_id = $this->fornitore_id;
         $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
         $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->paginate(11);
         $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->paginate(11);
-        return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
+        return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi','$f_id'));
 
     }
 
@@ -196,7 +197,8 @@ class GeneraDistinta extends Component
 
     public function render()
     {
-
+        #$f_id = $this->fornitore_id;
+        #dd($f_id);
         $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
         $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->paginate(11);
         $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->paginate(11);
@@ -612,6 +614,40 @@ class GeneraDistinta extends Component
     public function set_sposta_articolo($dove)
     {
         $this->sposta_articolo = $dove;
+
+    }
+
+    public function stampa_distinta()
+    {
+        /* $id = $this->ordine_id;
+        if($id){
+            return redirect(route('mandati', compact('id')));
+        } */
+
+        $id = $this->ordine_id;
+        if($id)
+        {
+            return redirect(route('stampa.distinta',compact('id')));
+        }
+
+    }
+
+    public function ritornaIndiero()
+    {
+        /* dd('sono qui'); */
+        return redirect(route('operazioni'));
+    }
+
+    public function manuale()
+    {
+        $id = $this->ordine_id;
+        $fornitore_id = $this->fornitore_id;
+        if($id)
+        {
+            #return redirect(route('importa_fattura_manuale', compact('id','fornitore_id')));
+
+            return redirect(route('importa_fattura_manuale', ['id' => $id,'f_id' => $fornitore_id]));
+        }
 
     }
 

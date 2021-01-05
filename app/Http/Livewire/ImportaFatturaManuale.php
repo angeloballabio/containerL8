@@ -9,6 +9,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Support\Facades\DB;
 #use App\Livewire\TabellaFattura;
 use Livewire\WithPagination;
+use App\Models\ElencoArticoli;
 
 
 
@@ -18,7 +19,7 @@ class ImportaFatturaManuale extends Component
 
     public $ordine_id;
     public $articolo_id = 0, $selezionato=0, $articoli_take=19, $articoli_skip=0,$magazzino_take=19, $magazzino_skip=0, $articoli_count, $magazzino_count  ;
-    public $descrizione_uk, $descrizione_it, $pezzi, $colli, $peso_lordo, $peso_netto, $codice_prodotto, $unita_misura, $prezzo_unitario, $prezzo_totale, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites;
+    public $descrizione_uk, $descrizione_it, $pezzi, $colli, $peso_lordo, $peso_netto, $codice_prodotto, $unita_misura, $prezzo_unitario, $prezzo_totale, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites, $f_id;
     public $PageArticoli, $PageGruppi;
 
 
@@ -45,10 +46,12 @@ class ImportaFatturaManuale extends Component
     ];
 
 
-    public function mount($id)
+    public function mount($id,$f_id)
     {
+        #dd($f_id);
         $this->selezionato = $id;
         $this->ordine_id = $id;
+        $this->f_id = $f_id;
         #dd($this->ordine_id);
         #$this->emit('tabellaFattura', $id);
     }
@@ -87,6 +90,7 @@ class ImportaFatturaManuale extends Component
             $this->richiede_ce = $articolo->richiede_ce == 1 ? 'true':'';
             $this->richiede_age = $articolo->richiede_age == 1 ? 'true':'';
             $this->richiede_cites = $articolo->richiede_cites == 1 ? 'true':'';
+            $this->f_id = $articolo->fornitore_id;
         }
     }
 
@@ -251,6 +255,7 @@ class ImportaFatturaManuale extends Component
             $articolo->richiede_ce = $this->richiede_ce == true ? '1':'0';
             $articolo->richiede_age = $this->richiede_age == true ? '1':'0';
             $articolo->richiede_cites = $this->richiede_cites == true ? '1':'0';
+            $articolo->fornitore_id = $this->f_id;
             $articolo->save();
         }
 
@@ -263,7 +268,45 @@ class ImportaFatturaManuale extends Component
 
     public function salva_distinta()
     {
-        dd('salva distinta');
+        #scrive e salva gli articoli da ricordare se non sono gia definiti  ElencoArticoli
+        $elenco_articoli = FatturaData::where('operazione', '=', $this->ordine_id)->get();
+        foreach( $elenco_articoli as $articolo)
+        {
+            $articolo_esistente = ElencoArticoli::where('codice_articolo', '=', $articolo->codice_prodotto)->first();
+            #dd($articolo);
+            if($articolo_esistente == null){
+                $nuovo_articolo = new ElencoArticoli();
+                $nuovo_articolo->descrizione_uk = $articolo->uk_descrizione;
+                $nuovo_articolo->descrizione_it = $articolo->it_descrizione;
+                $nuovo_articolo->voce_doganale = $articolo->voce_doganale;
+                $nuovo_articolo->diritti_doganali = $articolo->diritti_doganali;
+                $nuovo_articolo->val_iva = $articolo->val_iva;
+                $nuovo_articolo->aliquota_iva = $articolo->aliquota_iva;
+                $nuovo_articolo->acciaio = $articolo->acciaio;
+                $nuovo_articolo->acciaio_inox = $articolo->acciaio_inox;
+                $nuovo_articolo->plastica = $articolo->plastica;
+                $nuovo_articolo->legno = $articolo->legno;
+                $nuovo_articolo->bambu = $articolo->bambu;
+                $nuovo_articolo->vetro = $articolo->vetro;
+                $nuovo_articolo->ceramica = $articolo->ceramica;
+                $nuovo_articolo->carta = $articolo->carta;
+                $nuovo_articolo->pietra = $articolo->pietra;
+                $nuovo_articolo->posateria = $articolo->posateria;
+                $nuovo_articolo->attrezzi_cucina = $articolo->attrezzi_cucina;
+                $nuovo_articolo->richiede_ce = $articolo->richiede_ce;
+                $nuovo_articolo->richiede_age = $articolo->richiede_age;
+                $nuovo_articolo->richiede_cites = $articolo->richiede_cites;
+                $nuovo_articolo->fornitore_id = $articolo->fornitore_id;
+                $nuovo_articolo->codice_articolo = $articolo->codice_prodotto;
+                $nuovo_articolo->fornitore_id = $articolo->fornitore_id;
+                $nuovo_articolo->save();
+            }
+        }
+
+        #scrive gli articoli raggruppandoli per descrizione italiano nella distinta
+
+        #cancella la fattura
+
     }
 
     public function render()

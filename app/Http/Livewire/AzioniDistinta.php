@@ -6,13 +6,15 @@ use Livewire\Component;
 
 class AzioniDistinta extends Component
 {
-    public $ordine_id;
+    public $ordine_id, $fornitore_id;
     public $totali;
 
-    public function mount($id)
+    public function mount($id,$fornitore_id)
     {
-        $this->ordine_id = $id;
 
+        dd($fornitore_id);
+        $this->ordine_id = $id;
+        $this->fornitore_id = $fornitore_id;
     }
 
     public function stampa_distinta()
@@ -39,9 +41,11 @@ class AzioniDistinta extends Component
     public function manuale()
     {
         $id = $this->ordine_id;
+        $fornitore_id = $this->fornitore_id;
+        dd($fornitore_id);
         if($id)
         {
-            return redirect(route('importa_fattura_manuale', compact('id')));
+            return redirect(route('importa_fattura_manuale', compact('id','fornitore_id')));
         }
 
     }
