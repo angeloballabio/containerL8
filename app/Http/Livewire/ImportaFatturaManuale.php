@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 #use App\Livewire\TabellaFattura;
 use Livewire\WithPagination;
 use App\Models\ElencoArticoli;
+use App\Models\Articoli;
+use App\Models\Pezzi;
 
 
 
@@ -114,7 +116,7 @@ class ImportaFatturaManuale extends Component
             query di esempio
             SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
         */
-        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->paginate(19);
+        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->skip($this->magazzino_skip)->take($this->magazzino_take)->get();
 
         return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
 
@@ -142,7 +144,7 @@ class ImportaFatturaManuale extends Component
             query di esempio
             SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
         */
-        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->paginate(19);
+        $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->skip($this->magazzino_skip)->take($this->magazzino_take)->get();
 
         return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
     }
@@ -263,7 +265,9 @@ class ImportaFatturaManuale extends Component
 
     public function cancella_fattura()
     {
-        dd('cancella_fattura');
+        #dd('cancella_fattura');
+        #DB::delete('delete from FatturaData where ordine_id = ?', [$this->ordine_id]);
+        Fatturadata::truncate();
     }
 
     public function salva_distinta()
@@ -305,7 +309,94 @@ class ImportaFatturaManuale extends Component
 
         #scrive gli articoli raggruppandoli per descrizione italiano nella distinta
 
+
+        $elenco_articoli = FatturaData::where('operazione', '=', $this->ordine_id)->get();
+        foreach ($elenco_articoli as $articolo) {
+            $sel_articolo = Articoli::where('descrizione_it', '=', $articolo->it_descrizione)->where('ordine_id','=', $this->ordine_id)->first();
+            #dd($sel_articolo);
+            if($sel_articolo){
+                $pezzi = new Pezzi();
+                $pezzi->ordine_id = $this->ordine_id;
+                $pezzi->articolo_id = $sel_articolo->id; /* $articolo->id; */
+                $pezzi->codice_articolo = $articolo->codice_prodotto;
+                $pezzi->valore = $articolo->prezzo_totale;
+                $pezzi->netto = $articolo->peso_netto;
+                $pezzi->lordo = $articolo->peso_lordo;
+                $pezzi->pezzi = $articolo->pezzi;
+                $pezzi->colli = $articolo->colli;
+                $pezzi->save();
+            } else {
+                $articoli = new Articoli();
+                $articoli->descrizione_uk = $articolo->uk_descrizione;
+                $articoli->descrizione_it = $articolo->it_descrizione;
+                $articoli->ordine_id = $this->ordine_id;
+                $articoli->voce_doganale = $articolo->voce_doganale;
+                $articoli->diritti_doganali = $articolo->diritti_doganali;
+                $articoli->val_iva = $articolo->val_iva;
+                $articoli->aliquota_iva = $articolo->aliquota_iva;
+                $articoli->acciaio = $articolo->acciaio;
+                $articoli->acciaio_inox = $articolo->acciaio_inox;
+                $articoli->plastica = $articolo->plastica;
+                $articoli->legno = $articolo->legno;
+                $articoli->bambu = $articolo->bambu;
+                $articoli->vetro = $articolo->vetro;
+                $articoli->ceramica = $articolo->ceramica;
+                $articoli->carta = $articolo->carta;
+                $articoli->pietra = $articolo->pietra;
+                $articoli->posateria = $articolo->posateria;
+                $articoli->attrezzi_cucina = $articolo->attrezzi_cucina;
+                $articoli->richiede_ce = $articolo->richiede_ce;
+                $articoli->richiede_age = $articolo->richiede_age;
+                $articoli->richiede_cites = $articolo->richiede_cites;
+                $articoli->fornitore_id = $articolo->fornitore_id;
+                $articoli->save();
+                $sel_articolo = Articoli::where('descrizione_it', '=', $articolo->it_descrizione)->where('ordine_id','=', $this->ordine_id)->first();
+                #dd($sel_articolo);
+
+                $pezzi = new Pezzi();
+                $pezzi->ordine_id = $this->ordine_id;
+                $pezzi->articolo_id = $sel_articolo->id;
+                $pezzi->codice_articolo = $articolo->codice_prodotto;
+                $pezzi->valore = $articolo->prezzo_totale;
+                $pezzi->netto = $articolo->peso_netto;
+                $pezzi->lordo = $articolo->peso_lordo;
+                $pezzi->pezzi = $articolo->pezzi;
+                $pezzi->colli = $articolo->colli;
+                $pezzi->save();
+
+            }
+
+        }
+
+        $sel_articoli = Articoli::where('ordine_id', '=', $this->ordine_id)->get();
+        foreach($sel_articoli as $sel_articolo){
+            #dd($sel_articolo);
+            $sel_pezzi = Pezzi::where('articolo_id', '=', $sel_articolo->id)->get();
+            $totale_pezzi = 0;
+            $totale_colli = 0;
+            $totale_lordo = 0.0;
+            $totale_netto = 0.0;
+            $totale_valore = 0.0;
+            foreach($sel_pezzi as $sel_pezzo){
+                $totale_pezzi += $sel_pezzo->pezzi;
+                $totale_colli += $sel_pezzo->colli;
+                $totale_lordo += $sel_pezzo->lordo;
+                $totale_netto += $sel_pezzo->netto;
+                $totale_valore += $sel_pezzo->pezzi;
+            }
+            $sel_articolo->tot_pezzi = $totale_pezzi;
+            $sel_articolo->tot_colli = $totale_colli;
+            $sel_articolo->tot_lordo = $totale_lordo;
+            $sel_articolo->tot_netto = $totale_netto;
+            $sel_articolo->tot_valore = $totale_valore;
+            $sel_articolo->save();
+
+        }
+
+
         #cancella la fattura
+        $this->cancella_fattura();
+
 
     }
 

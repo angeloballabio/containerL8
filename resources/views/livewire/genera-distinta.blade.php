@@ -148,25 +148,29 @@
                             @if ($selezionato == $articolo->id)
                             <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})" >{{ $articolo->descrizione_uk }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->descrizione_it }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_pezzi }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_colli }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_lordo }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_netto }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_valore }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_pezzi }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_colli }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_lordo }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_netto }}</td>
+                            <td class="text-right" tyle="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_valore }}</td>
                             @else
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})" >{{ $articolo->descrizione_uk }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->descrizione_it }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_pezzi }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_colli }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_lordo }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_netto }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_valore }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_pezzi }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_colli }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_lordo }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_netto }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_valore }}</td>
                             @endif
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-               {{ $articoli->links() }}
+               {{-- {{ $articoli->links() }} --}}
+               <div class="mt-2">
+                    <span class="ml-3">Da {{ $articoli_skip + 1 }} a {{ $articoli_take + $articoli_skip  }} di {{ $articoli_count }}</span>
+                    <button  type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 ml-3" style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='diminuisci_articoli'>Precedente</button> <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click="aumenta_articoli">Prossimo</button>
+               </div>
                <div class="inline-flex  w-full mt-3">
 
                     <button type="button"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 w-1/5" btn-lg btn-block wire:click="aggiungi">Aggiungi</button>
@@ -310,25 +314,29 @@
                         @foreach($n_pezzi as $pezzo)
                         <tr>
                             @if ($selezionato_p == $pezzo->id)
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})" >{{ $pezzo->pezzi }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->colli }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->lordo }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->netto }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->valore }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})" >{{ $pezzo->pezzi }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->colli }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->lordo }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->netto }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->valore }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->codice_articolo }}</td>
                             @else
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})" >{{ $pezzo->pezzi }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->colli }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->lordo }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->netto }}</td>
-                            <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->valore }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})" >{{ $pezzo->pezzi }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->colli }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->lordo }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->netto }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->valore }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PezzoSelezionato',{{ $pezzo->id }})">{{ $pezzo->codice_articolo }}</td>
                             @endif
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                {{ $n_pezzi->links() }}
+                {{-- {{ $n_pezzi->links() }} --}}
+                <div class="mt-2">
+                    <span class="ml-3">Da {{ $pezzi_skip + 1 }} a {{ $pezzi_take + $pezzi_skip  }} di {{ $pezzi_count }}</span>
+                    <button  type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 ml-3" style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='diminuisci_pezzi'>Precedente</button> <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click="aumenta_pezzi">Prossimo</button>
+                </div>
                 <div class="flex  w-full mt-3">
                     {{-- <div class="col-12 d-flex justify-content-around" style="background-color: lightgrey"> --}}
                     <button type="button"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 w-1/5"  wire:click='aggiungi_p'>Aggiungi</button>

@@ -20,6 +20,7 @@ class GeneraDistinta extends Component
     public $totale_colli, $totale_pezzi, $totale_lordo, $totale_netto, $totale_valore;
     public $descrizione_uk, $descrizione_it, $tot_pezzi, $tot_colli, $tot_lordo, $tot_netto, $tot_valore, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites, $fornitore_id, $codicearticolo, $trovatoarticolo, $sposta_articolo;
     public $pezzi, $colli, $lordo, $netto, $valore, $codice_articolo;
+    public $articoli_take=11, $articoli_skip=0,$pezzi_take=11, $pezzi_skip=0, $articoli_count, $pezzi_count;
 
 
     protected $listeners = [
@@ -82,6 +83,8 @@ class GeneraDistinta extends Component
             $this->richiede_cites = $articolo->richiede_cites == 1 ? 'true':'';
             $this->fornitore_id = $articolo->fornitore_id;
         }
+        $pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->get();
+        $this->pezzi_count = $pezzi->count();
 
         /* $this->pezzo_id = 0; */
         $this->pezzi = null;
@@ -105,6 +108,7 @@ class GeneraDistinta extends Component
             $this->netto = $pezzo->netto;
             $this->valore = $pezzo->valore;
             $this->codice_articolo = $pezzo->codice_articolo;
+
         }
     }
 
@@ -134,6 +138,8 @@ class GeneraDistinta extends Component
         $fornitore = Fornitore::where('soprannome','=',$operazione->nome_fornitore)->get()->first();
         $this->fornitore_id = $fornitore->id;
         $this->emit('ImpostaOrdineId',compact('ordine'));
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->get();
+        $this->articoli_count = $articoli->count();
     }
 
     public function aggiunto()
@@ -167,8 +173,8 @@ class GeneraDistinta extends Component
         $this->codice_articolo = null;
         $f_id = $this->fornitore_id;
         $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
-        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->paginate(11);
-        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->paginate(11);
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
+        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->skip($this->pezzi_skip)->take($this->pezzi_take)->get();
         return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi','$f_id'));
 
     }
@@ -200,8 +206,8 @@ class GeneraDistinta extends Component
         #$f_id = $this->fornitore_id;
         #dd($f_id);
         $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
-        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->paginate(11);
-        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->paginate(11);
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
+        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->skip($this->pezzi_skip)->take($this->pezzi_take)->get();
         return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
     }
 
@@ -649,6 +655,97 @@ class GeneraDistinta extends Component
             return redirect(route('importa_fattura_manuale', ['id' => $id,'f_id' => $fornitore_id]));
         }
 
+    }
+
+    public function diminuisci_articoli()
+    {
+
+        if($this->articoli_skip > 0)
+        {
+            $this->articoli_skip = $this->articoli_skip - 11;
+            $this->articoli_take = 11;
+        }
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
+        /*
+            query di esempio
+            SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
+        */
+        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->skip($this->pezzi_skip)->take($this->pezzi_take)->get();
+        $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
+        return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
+
+    }
+
+    public function aumenta_articoli() {
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->get();
+        $this->articoli_count = $articoli->count();
+        if($this->articoli_skip < $this->articoli_count)
+        {
+            $this->articoli_skip = $this->articoli_skip + 11;
+            if ($this->articoli_skip + $this->articoli_take > $this->articoli_count) {
+                $this->articoli_take = $this->articoli_count - $this->articoli_skip;
+                if($this->articoli_take < 0)
+                {
+                    $this->articoli_skip = $this->articoli_skip - 11;
+                    $this->articoli_take = $this->articoli_count - $this->articoli_skip;
+                }
+
+            }
+        }
+
+
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
+        /*
+            query di esempio
+            SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
+        */
+        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->skip($this->pezzi_skip)->take($this->pezzi_take)->get();
+        $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
+        return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
+    }
+
+    public function diminuisci_pezzi()
+    {
+        if($this->pezzi_skip > 0)
+        {
+            $this->pezzi_skip = $this->pezzi_skip - 11;
+            $this->pezzi_take = 11;
+        }
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
+        /*
+            query di esempio
+            SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
+        */
+        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->skip($this->pezzi_skip)->take($this->pezzi_take)->get();
+        $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
+        return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
+
+    }
+
+    public function aumenta_pezzi() {
+        $pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->get();
+        $this->pezzi_count = $pezzi->count();
+        if($this->pezzi_skip < $this->pezzi_count)
+        {
+            $this->pezzi_skip = $this->pezzi_skip + 11;
+            if ($this->pezzi_skip + $this->pezzi_take > $this->pezzi_count) {
+                $this->pezzi_take = $this->pezzi_count - $this->pezzi_skip;
+                if($this->pezzi_take < 0)
+                {
+                    $this->pezzi_skip = $this->pezzi_skip - 11;
+                    $this->pezzi_take = $this->pezzi_count- $this->pezzi_skip;
+                }
+
+            }
+        }
+        $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
+        /*
+            query di esempio
+            SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
+        */
+        $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->skip($this->pezzi_skip)->take($this->pezzi_take)->get();
+        $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
+        return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
     }
 
 }
