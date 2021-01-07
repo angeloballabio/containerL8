@@ -652,7 +652,21 @@ class GeneraDistinta extends Component
         {
             #return redirect(route('importa_fattura_manuale', compact('id','fornitore_id')));
 
-            return redirect(route('importa_fattura_manuale', ['id' => $id,'f_id' => $fornitore_id]));
+            return redirect(route('importa-fattura-manuale', ['id' => $id,'f_id' => $fornitore_id]));
+        }
+
+    }
+
+    public function semi_automatico()
+    {
+        #dd('sono in semi automatico');
+        $id = $this->ordine_id;
+        $fornitore_id = $this->fornitore_id;
+        if($id)
+        {
+            #return redirect(route('importa_fattura_manuale', compact('id','fornitore_id')));
+
+            return redirect(route('fattura-semi-automatico', ['id' => $id,'f_id' => $fornitore_id]));
         }
 
     }

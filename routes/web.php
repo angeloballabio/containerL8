@@ -13,6 +13,7 @@ use App\Http\Livewire\Valute;
 use App\Http\Livewire\Resa;
 use App\Http\Livewire\GeneraDistinta;
 use App\Http\Livewire\ImportaFatturaManuale;
+use App\Http\Livewire\FatturaSemiAutomatico;
 use App\Http\Controllers\Mandati;
 use App\Http\Controllers\Bollettino;
 use App\Http\Controllers\StampaDistinta;
@@ -54,4 +55,5 @@ Route::get('/genera_distinta/{id}', GeneraDistinta::class)->name('genera.distint
 Route::get('/stampa_distinta/{id}', [StampaDistinta::class, 'index'])->name('stampa.distinta')->middleware('auth');
 Route::get('/distinta/pdf/{id}', [StampaDistinta::class, 'stampaPdf'])->name('distinta.pdf')->middleware('auth');
 Route::get('/importa_fattura/{id}', [ImportaFattura::class, 'importa'])->name('importa_fattura')->middleware('auth');
-Route::get('/importa_fattura_manuale/{id}/{f_id}', ImportaFatturaManuale::class)->name('importa_fattura_manuale')->middleware('auth');
+Route::get('/importa-fattura-manuale/{id}/{f_id}', ImportaFatturaManuale::class)->name('importa-fattura-manuale')->middleware('auth');
+Route::get('/fattura-semi-automatico/{id}/{f_id}', FatturaSemiAutomatico::class)->name('fattura-semi-automatico')->middleware('auth');

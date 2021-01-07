@@ -15,7 +15,7 @@ use App\Models\Pezzi;
 
 
 
-class ImportaFatturaManuale extends Component
+class FatturaSemiAutomatico extends Component
 {
     use WithPagination;
 
@@ -193,14 +193,24 @@ class ImportaFatturaManuale extends Component
     }
 
 
-    public function carica_fattura()
+    public function carica_fattura_sa()
     {
+        #dd('sono qui');
         $text = '/home/angelo/Scrivania/fattura-tipo.xls';
-        $process = new Process(["python3", "/home/angelo/laravel/container/resources/Python/main.py",$text,$this->ordine_id,0]);
+        $modo = 1;
+        $process = new Process(["python3", "/home/angelo/laravel/container/resources/Python/main.py",$text,$this->ordine_id,$modo]);
         $process->run();
+        // executes after the command finishes
+        /* if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        dd($process->getOutput()); */
+
         while ($process->isRunning()) {
             // waiting for process to finish
         }
+        // echo $process->getOutput();
         $articoli = FatturaData::where('operazione','=',$this->ordine_id)->get();
         $this->articoli_count = $articoli->count();
         $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->get();
@@ -215,13 +225,14 @@ class ImportaFatturaManuale extends Component
 
     }
 
-    public function ritorna()
+    public function ritorna_sa()
     {
+        #dd('sono qui');
         $id = $this->ordine_id;
         return redirect(route('genera.distinta', compact('id')));
     }
 
-    public function modifica_fattura()
+    public function modifica_fattura_sa()
     {
 
         if($this->articolo_id != 0)
@@ -263,14 +274,14 @@ class ImportaFatturaManuale extends Component
 
     }
 
-    public function cancella_fattura()
+    public function cancella_fattura_sa()
     {
         #dd('cancella_fattura');
         #DB::delete('delete from FatturaData where ordine_id = ?', [$this->ordine_id]);
         Fatturadata::truncate();
     }
 
-    public function salva_distinta()
+    public function salva_distinta_sa()
     {
         #scrive e salva gli articoli da ricordare se non sono gia definiti  ElencoArticoli
         $elenco_articoli = FatturaData::where('operazione', '=', $this->ordine_id)->get();
@@ -395,7 +406,7 @@ class ImportaFatturaManuale extends Component
 
 
         #cancella la fattura
-        $this->cancella_fattura();
+        $this->cancella_fattura_sa();
 
 
     }
@@ -414,7 +425,7 @@ class ImportaFatturaManuale extends Component
             SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
         */
         $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->skip($this->magazzino_skip)->take($this->magazzino_take)->get();
-        return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
+        return view('livewire.fattura-semi-automatico', compact('articoli','gruppi'))->layout('layouts.guest');
     }
 
 

@@ -1,0 +1,2 @@
+sono in fatturaparis dentro metodo 1 
+SELECT * FROM elenco_articoli WHERE codice_articolo = 'CARDPRO' AND fornitore_id = '14'
