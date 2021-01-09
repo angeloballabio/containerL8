@@ -9,6 +9,7 @@ use App\Models\Articoli;
 use App\Models\Pezzi;
 use App\Models\Fornitore;
 use App\Models\ElencoArticoli;
+use Codedge\Fpdf\Fpdf\Fpdf;
 
 class GeneraDistinta extends Component
 {
@@ -175,7 +176,7 @@ class GeneraDistinta extends Component
         $operazione = Operazione::where('id', $this->ordine_id)->get()->first();
         $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
         $n_pezzi = Pezzi::where('articolo_id','=',$this->articolo_id)->skip($this->pezzi_skip)->take($this->pezzi_take)->get();
-        return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi','$f_id'));
+        return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi','f_id'));
 
     }
 
@@ -762,4 +763,8 @@ class GeneraDistinta extends Component
         return view('livewire.genera-distinta',compact('operazione','articoli','n_pezzi'));
     }
 
+    public function stampa_sanitari() {
+        $id = $this->ordine_id;
+        return redirect(route('stampa_sanitari.seleziona',compact('id')));
+    }
 }

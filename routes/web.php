@@ -18,6 +18,8 @@ use App\Http\Controllers\Mandati;
 use App\Http\Controllers\Bollettino;
 use App\Http\Controllers\StampaDistinta;
 use App\Http\Controllers\ImportaFattura;
+use App\Http\Controllers\StampaSanitari;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,3 +59,13 @@ Route::get('/distinta/pdf/{id}', [StampaDistinta::class, 'stampaPdf'])->name('di
 Route::get('/importa_fattura/{id}', [ImportaFattura::class, 'importa'])->name('importa_fattura')->middleware('auth');
 Route::get('/importa-fattura-manuale/{id}/{f_id}', ImportaFatturaManuale::class)->name('importa-fattura-manuale')->middleware('auth');
 Route::get('/fattura-semi-automatico/{id}/{f_id}', FatturaSemiAutomatico::class)->name('fattura-semi-automatico')->middleware('auth');
+Route::get('/StampaSanitari/{id}', [StampaSanitari::class, 'seleziona'])->name('stampa_sanitari.seleziona')->middleware('auth');
+/* Route::get('/StampaSanitari/acciaio/{id}', [StampaSanitari::class, 'stampa_acciaio'])->name('stampa_sanitari.acciaio')->middleware('auth');
+Route::get('/StampaSanitari/acciaio_inos/{id}', [StampaSanitari::class, 'stampa_acciaio_inox'])->name('stampa_sanitari.acciaio_inox')->middleware('auth');
+Route::get('/StampaSanitari/posateria/{id}', [StampaSanitari::class, 'stampa_posateria'])->name('stampa_sanitari.posateria')->middleware('auth');
+Route::get('/StampaSanitari/strumenti_cucina/{id}', [StampaSanitari::class, 'stampa_strumenti_cucina'])->name('stampa_sanitari.strumenti_cucina')->middleware('auth');
+Route::get('/StampaSanitari/legno/{id}', [StampaSanitari::class, 'stampa_legno'])->name('stampa_sanitari.legno')->middleware('auth');
+Route::get('/StampaSanitari/bambu/{id}', [StampaSanitari::class, 'stampa_bambu'])->name('stampa_sanitari.bambu')->middleware('auth');
+Route::get('/StampaSanitari/ceramica/{id}', [StampaSanitari::class, 'stampa_ceramica'])->name('stampa_sanitari.ceramica')->middleware('auth');
+Route::get('/StampaSanitari/carta/{id}', [StampaSanitari::class, 'stampa_carta'])->name('stampa_sanitari.carta')->middleware('auth');
+Route::get('/StampaSanitari/pietra/{id}', [StampaSanitari::class, 'stampa_pietra'])->name('stampa_sanitari.pietra')->middleware('auth'); */
