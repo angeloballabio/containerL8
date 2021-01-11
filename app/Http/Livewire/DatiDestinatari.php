@@ -8,7 +8,7 @@ use App\Models\Destinatario;
 class DatiDestinatari extends Component
 {
     public $destinatario_id;
-    public $soprannome, $nome, $indirizzo, $cap, $luogo, $provincia, $numero, $stato, $telefono1, $telefono2, $mobile, $fax, $mail, $piva;
+    public $soprannome, $nome, $indirizzo, $cap, $luogo, $provincia, $numero, $stato, $telefono1, $telefono2, $mobile, $fax, $mail, $piva, $responsabile;
 
 
     protected $listeners = [
@@ -30,6 +30,7 @@ class DatiDestinatari extends Component
         'fax' => 'nullable|string|max:30',
         'mail' => 'required|email',
         'piva' => 'required|string|max:20',
+        'responsabile' => 'required|string|max:40'
     ];
 
     public function destinatarioSelezionato($destinatarioId){
@@ -51,6 +52,7 @@ class DatiDestinatari extends Component
             $this->fax = $destinatario->fax;
             $this->mail = $destinatario->mail;
             $this->piva = $destinatario->piva;
+            $this->responsabile = $destinatario->responsabile;
         }
 
     }
@@ -74,6 +76,7 @@ class DatiDestinatari extends Component
         $destinatario->fax = $this->fax;
         $destinatario->mail = $this->mail;
         $destinatario->piva = $this->piva;
+        $destinatario->responsabile = $this->responsabile;
         $destinatario->save();
         $this->emit('AggiornaDestinatario');
         /* return redirect()->to('/gestione-destinatari'); */
@@ -99,6 +102,7 @@ class DatiDestinatari extends Component
         $destinatario->fax = $this->fax;
         $destinatario->mail = $this->mail;
         $destinatario->piva = $this->piva;
+        $destinatario->responsabile = $this->responsabile;
         $destinatario->save();
         $this->emit('AggiornaDestinatario');
         /* return redirect()->to('/gestione-destinatari'); */

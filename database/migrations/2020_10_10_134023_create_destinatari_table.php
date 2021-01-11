@@ -29,6 +29,7 @@ class CreateDestinatariTable extends Migration
             $table->string('fax',30)->nullable();
             $table->string('mail',100)->nullable();
             $table->string('piva',20)->nullable();
+            $table->string('responsabile', 40)->nullable();
             $table->timestamps();
         });
     }

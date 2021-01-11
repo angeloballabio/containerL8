@@ -100,10 +100,16 @@
             </div>
         </div>
         <div class="inline-flex w-full mb-1">
-            <div class="w-full">
+            <div class="w-1/2">
                 @error('mail') <div><span style="color: red">{{ $message }}</span></div> @enderror
                 <label for="mail" class="w-1/3" style="text-align: right;">Mail :</label>
                 <input type="text" class="w-2/3 border p-1" style="height: 20px" wire:model="mail">
+
+            </div>
+            <div class="w-1/2">
+                @error('responsabile') <div><span style="color: red">{{ $message }}</span></div> @enderror
+                <label for="responsabile" class="w-1/3" style="text-align: right;">Responsabile :</label>
+                <input type="text" id="responsabile" class="w-2/3 border p-1" style="height: 20px" wire:model="responsabile">
 
             </div>
         </div>

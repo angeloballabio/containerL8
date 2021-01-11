@@ -767,4 +767,14 @@ class GeneraDistinta extends Component
         $id = $this->ordine_id;
         return redirect(route('stampa_sanitari.seleziona',compact('id')));
     }
+
+    public function stampa_age(){
+        $id = $this->ordine_id;
+        return redirect(route('stampa_agej',['id' => $id]));
+    }
+
+    public function stampa_cites(){
+        $id = $this->ordine_id;
+        return redirect(route('stampa_cites', ['id' => $id]));
+    }
 }

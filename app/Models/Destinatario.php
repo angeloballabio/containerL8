@@ -23,6 +23,7 @@ class Destinatario extends Model
         'mobile',
         'fax',
         'mail',
-        'piva'
+        'piva',
+        'responsabile'
     ];
 }
