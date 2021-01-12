@@ -21,6 +21,7 @@ use App\Http\Controllers\ImportaFattura;
 use App\Http\Controllers\StampaSanitari;
 use App\Http\Controllers\StampaAgej;
 use App\Http\Controllers\StampaCites;
+use App\Http\Controllers\StampaCe;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,3 +65,4 @@ Route::get('/fattura-semi-automatico/{id}/{f_id}', FatturaSemiAutomatico::class)
 Route::get('/StampaSanitari/{id}', [StampaSanitari::class, 'seleziona'])->name('stampa_sanitari.seleziona')->middleware('auth');
 Route::get('/StampaAgej/{id}', [StampaAgej::class, 'stampa_age'])->name('stampa_agej')->middleware('auth');
 Route::get('/StampaCites/{id}', [StampaCites::class, 'stampa_cites'])->name('stampa_cites')->middleware('auth');
+Route::get('/StampaCe/{id}', [StampaCe::class, 'stampa_ce'])->name('stampa_ce')->middleware('auth');

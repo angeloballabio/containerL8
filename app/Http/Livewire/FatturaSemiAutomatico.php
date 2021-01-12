@@ -12,17 +12,18 @@ use Livewire\WithPagination;
 use App\Models\ElencoArticoli;
 use App\Models\Articoli;
 use App\Models\Pezzi;
-
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 
 class FatturaSemiAutomatico extends Component
 {
-    use WithPagination;
+    use WithFileUploads;
 
     public $ordine_id;
     public $articolo_id = 0, $selezionato=0, $articoli_take=19, $articoli_skip=0,$magazzino_take=19, $magazzino_skip=0, $articoli_count, $magazzino_count  ;
     public $descrizione_uk, $descrizione_it, $pezzi, $colli, $peso_lordo, $peso_netto, $codice_prodotto, $unita_misura, $prezzo_unitario, $prezzo_totale, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites, $f_id;
-    public $PageArticoli, $PageGruppi;
+    public $PageArticoli, $PageGruppi, $path_fattura, $text, $del_fattura;
 
 
     protected $listeners = [
@@ -195,10 +196,12 @@ class FatturaSemiAutomatico extends Component
 
     public function carica_fattura_sa()
     {
-        #dd('sono qui');
-        $text = '/home/angelo/Scrivania/fattura-tipo.xls';
+
+        $fattura = $this->path_fattura->store('xls');
+        $this->del_fattura = $fattura;
+        $this->text = public_path('' . $fattura);
         $modo = 1;
-        $process = new Process(["python3", "/home/angelo/laravel/container/resources/Python/main.py",$text,$this->ordine_id,$modo]);
+        $process = new Process(["python3", "/home/angelo/laravel/container/resources/Python/main.py",$this->text,$this->ordine_id,$modo]);
         $process->run();
         // executes after the command finishes
         /* if (!$process->isSuccessful()) {
@@ -227,7 +230,8 @@ class FatturaSemiAutomatico extends Component
 
     public function ritorna_sa()
     {
-        #dd('sono qui');
+
+        Storage::delete($this->del_fattura);
         $id = $this->ordine_id;
         return redirect(route('genera.distinta', compact('id')));
     }

@@ -213,11 +213,16 @@
         </div>
         <div class="inline-flex w-full pb-2 mb-2 pt-4 bg-gray-300 rounded">
             <div class="w-1/7 ml-3 mr-3">
-                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='carica_fattura_sa'>Importa fattura</button>
-                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='modifica_fattura_sa'>Modifica</button>
-                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='cancella_fattura_sa'>Cancella</button>
-                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='salva_distinta_sa'>Salva distinta</button>
-                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='ritorna_sa'>Termina</button>
+                <form wire:submit.prevent='carica_fattura_sa'>
+                    <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " type="file" wire:model='path_fattura'>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 45px;" {{-- wire:click='carica_fattura' --}}>Importa fattura</button>
+                </form>
+            </div>
+            <div class="w-1/2 ml-3 mr-3">
+                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 45px;" wire:click='modifica_fattura_sa'>Modifica</button>
+                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 45px;" wire:click='cancella_fattura_sa'>Cancella</button>
+                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 45px;" wire:click='salva_distinta_sa'>Salva distinta</button>
+                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 45px; " wire:click='ritorna_sa'>Termina</button>
             </div>
         </div>
     </div>

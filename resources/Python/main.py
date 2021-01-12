@@ -43,6 +43,8 @@ class   CaricaFattura:
             self.CaricaFatturaParis()
         elif self.fornitore == 'Matt':
             self.CaricaFatturaParis()
+        elif self.fornitore == 'Burnice':
+            self.CaricaFatturaParis()
 
 
 

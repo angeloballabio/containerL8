@@ -12,17 +12,19 @@ use Livewire\WithPagination;
 use App\Models\ElencoArticoli;
 use App\Models\Articoli;
 use App\Models\Pezzi;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 
 
 class ImportaFatturaManuale extends Component
 {
-    use WithPagination;
+    use WithFileUploads;
 
     public $ordine_id;
     public $articolo_id = 0, $selezionato=0, $articoli_take=19, $articoli_skip=0,$magazzino_take=19, $magazzino_skip=0, $articoli_count, $magazzino_count  ;
     public $descrizione_uk, $descrizione_it, $pezzi, $colli, $peso_lordo, $peso_netto, $codice_prodotto, $unita_misura, $prezzo_unitario, $prezzo_totale, $voce_doganale, $diritti_doganali=0, $val_iva=0, $aliquota_iva=0, $acciaio, $acciaio_inox, $plastica, $legno, $bambu, $vetro, $ceramica, $carta, $pietra, $posateria, $attrezzi_cucina, $richiede_ce, $richiede_age, $richiede_cites, $f_id;
-    public $PageArticoli, $PageGruppi;
+    public $PageArticoli, $PageGruppi, $path_fattura, $text, $del_fattura;
 
 
     protected $listeners = [
@@ -195,8 +197,10 @@ class ImportaFatturaManuale extends Component
 
     public function carica_fattura()
     {
-        $text = '/home/angelo/Scrivania/fattura-tipo.xls';
-        $process = new Process(["python3", "/home/angelo/laravel/container/resources/Python/main.py",$text,$this->ordine_id,0]);
+        $fattura = $this->path_fattura->store('xls');
+        $this->text = public_path('' . $fattura);
+        $this->del_fattura = $fattura;
+        $process = new Process(["python3", "/home/angelo/laravel/container/resources/Python/main.py",$this->text,$this->ordine_id,0]);
         $process->run();
         while ($process->isRunning()) {
             // waiting for process to finish
@@ -211,12 +215,14 @@ class ImportaFatturaManuale extends Component
             SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
         */
         $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->skip($this->magazzino_skip)->take($this->magazzino_take)->get();
+
         return view('livewire.importa-fattura-manuale', compact('articoli','gruppi'))->layout('layouts.guest');
 
     }
 
     public function ritorna()
     {
+        Storage::delete($this->del_fattura);
         $id = $this->ordine_id;
         return redirect(route('genera.distinta', compact('id')));
     }

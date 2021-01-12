@@ -777,4 +777,9 @@ class GeneraDistinta extends Component
         $id = $this->ordine_id;
         return redirect(route('stampa_cites', ['id' => $id]));
     }
+
+    public function stampa_ce(){
+        $id = $this->ordine_id;
+        return redirect(route('stampa_ce', ['id' => $id]));
+    }
 }
