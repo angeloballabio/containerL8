@@ -160,7 +160,7 @@
                             <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_colli }}</td>
                             <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_lordo }}</td>
                             <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_netto }}</td>
-                            <td class="text-right" tyle="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_valore }}</td>
+                            <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->tot_valore }}</td>
                             @else
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})" >{{ $articolo->descrizione_uk }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('ArticoloSelezionato',{{ $articolo->id }})">{{ $articolo->descrizione_it }}</td>
@@ -405,7 +405,7 @@
                 <div class="inline-flex w-full mb-1">
                     <div class="w-full shadow pt-1 mb-2 mt-2 bg-gray-300 rounded " >
                         <div class="grid grid-cols-10 gap-x-2  ml-5 mr-5">
-                                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;">Cancella distinta</button>
+                                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='cancella_distinta'>Cancella distinta</button>
                                 <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='stampa_distinta'>Stampa distinta</button>
                                 <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='stampa_sanitari'>Stampa sanitari</button>
                                 <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1 " style="height: 25px; vertical-align: middle; padding-top: 0px;" wire:click='stampa_age'>Stampa AGE</button>

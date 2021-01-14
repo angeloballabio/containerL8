@@ -1,6 +1,14 @@
 <div>
     <h1 class="text-center text-xl font-semibold">Importa fattura manuale semi automatica </h1>
     <div>
+        @if (session()->has('message'))
+           {{--  <div class="alert alert-success text-center"> --}}
+            <div class="bg-green-200 text-blue-800 text-center">
+                {{ session('message') }}
+            </div>
+        @endif
+    </div>
+    <div>
         <div class='inline-flex w-full'>
             <div class="w-5/6">
                 {{-- @livewire('tabella-fattura') --}}
@@ -35,7 +43,11 @@
                             <td class="text-right" style="border-collapse: collapse; border: 1px solid black; background-color: #6699ff; color: white;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->prezzo_totale }}</td>
                             @else
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->uk_descrizione }}</td>
+                            @if ($articolo->it_descrizione == Null)
+                            <td style="border-collapse: collapse; border: 1px solid black; background-color: #ff6699;" wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->it_descrizione }}</td>
+                            @else
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->it_descrizione }}</td>
+                            @endif
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->codice_prodotto }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->colli }}</td>
                             <td style="border-collapse: collapse; border: 1px solid black; " wire:click="$emit('PSel',{{ $articolo->id }})" >{{ $articolo->pezzi }}</td>

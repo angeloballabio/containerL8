@@ -141,6 +141,9 @@ class GeneraDistinta extends Component
         $this->emit('ImpostaOrdineId',compact('ordine'));
         $articoli = Articoli::where('ordine_id','=',$this->ordine_id)->get();
         $this->articoli_count = $articoli->count();
+        $this->richiede_age = 0;
+        $this->richiede_ce = 0;
+        $this->richiede_cites = 0;
     }
 
     public function aggiunto()
@@ -781,5 +784,14 @@ class GeneraDistinta extends Component
     public function stampa_ce(){
         $id = $this->ordine_id;
         return redirect(route('stampa_ce', ['id' => $id]));
+    }
+
+    public function cancella_distinta(){
+        $pezzo = Pezzi::where('ordine_id',$this->ordine_id)->delete();
+        //$pezzo->delete();
+        $articolo = Articoli::where('ordine_id',$this->ordine_id)->delete();
+        //$articolo->delete();
+        $this->emit('Aggiunto');
+        $this->emit('Modificato');
     }
 }

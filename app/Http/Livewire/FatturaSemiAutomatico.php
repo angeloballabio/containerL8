@@ -230,7 +230,6 @@ class FatturaSemiAutomatico extends Component
 
     public function ritorna_sa()
     {
-
         Storage::delete($this->del_fattura);
         $id = $this->ordine_id;
         return redirect(route('genera.distinta', compact('id')));
@@ -288,130 +287,144 @@ class FatturaSemiAutomatico extends Component
     public function salva_distinta_sa()
     {
         #scrive e salva gli articoli da ricordare se non sono gia definiti  ElencoArticoli
-        $elenco_articoli = FatturaData::where('operazione', '=', $this->ordine_id)->get();
-        foreach( $elenco_articoli as $articolo)
-        {
-            $articolo_esistente = ElencoArticoli::where('codice_articolo', '=', $articolo->codice_prodotto)->first();
-            #dd($articolo);
-            if($articolo_esistente == null){
-                $nuovo_articolo = new ElencoArticoli();
-                $nuovo_articolo->descrizione_uk = $articolo->uk_descrizione;
-                $nuovo_articolo->descrizione_it = $articolo->it_descrizione;
-                $nuovo_articolo->voce_doganale = $articolo->voce_doganale;
-                $nuovo_articolo->diritti_doganali = $articolo->diritti_doganali;
-                $nuovo_articolo->val_iva = $articolo->val_iva;
-                $nuovo_articolo->aliquota_iva = $articolo->aliquota_iva;
-                $nuovo_articolo->acciaio = $articolo->acciaio;
-                $nuovo_articolo->acciaio_inox = $articolo->acciaio_inox;
-                $nuovo_articolo->plastica = $articolo->plastica;
-                $nuovo_articolo->legno = $articolo->legno;
-                $nuovo_articolo->bambu = $articolo->bambu;
-                $nuovo_articolo->vetro = $articolo->vetro;
-                $nuovo_articolo->ceramica = $articolo->ceramica;
-                $nuovo_articolo->carta = $articolo->carta;
-                $nuovo_articolo->pietra = $articolo->pietra;
-                $nuovo_articolo->posateria = $articolo->posateria;
-                $nuovo_articolo->attrezzi_cucina = $articolo->attrezzi_cucina;
-                $nuovo_articolo->richiede_ce = $articolo->richiede_ce;
-                $nuovo_articolo->richiede_age = $articolo->richiede_age;
-                $nuovo_articolo->richiede_cites = $articolo->richiede_cites;
-                $nuovo_articolo->fornitore_id = $articolo->fornitore_id;
-                $nuovo_articolo->codice_articolo = $articolo->codice_prodotto;
-                $nuovo_articolo->fornitore_id = $articolo->fornitore_id;
-                $nuovo_articolo->save();
+        $articoli = FatturaData::where('it_descrizione','=', Null)->where('operazione', '=', $this->ordine_id)->get();
+        if ($articoli->count() > 0){
+            session()->flash('message', 'Non tutti gli articoli nella fattura posseggono una descrizione italiana.');
+            $articoli = FatturaData::where('operazione','=',$this->ordine_id)->get();
+            $this->articoli_count = $articoli->count();
+            $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->get();
+            $this->magazzino_count = $gruppi->count();
+            $articoli = FatturaData::where('operazione','=',$this->ordine_id)->skip($this->articoli_skip)->take($this->articoli_take)->get();
+
+            /*
+                query di esempio
+                SELECT `it_descrizione`, ANY_VALUE(id) AS id, ANY_VALUE(voce_doganale) AS voce_doganale FROM fattura_data WHERE `operazione` = '66' GROUP BY `it_descrizione`
+            */
+            $gruppi = FatturaData::select('it_descrizione', DB::raw('ANY_VALUE(id) AS id'), DB::raw('ANY_VALUE(voce_doganale) AS voce_doganale'))->where('operazione','=', $this->ordine_id)->groupBy('it_descrizione')->skip($this->magazzino_skip)->take($this->magazzino_take)->get();
+            return view('livewire.fattura-semi-automatico', compact('articoli','gruppi'))->layout('layouts.guest');
+        } else {
+            $elenco_articoli = FatturaData::where('operazione', '=', $this->ordine_id)->get();
+            foreach ($elenco_articoli as $articolo) {
+                $articolo_esistente = ElencoArticoli::where('codice_articolo', '=', $articolo->codice_prodotto)->first();
+                #dd($articolo);
+                if ($articolo_esistente == null) {
+                    $nuovo_articolo = new ElencoArticoli();
+                    $nuovo_articolo->descrizione_uk = $articolo->uk_descrizione;
+                    $nuovo_articolo->descrizione_it = $articolo->it_descrizione;
+                    $nuovo_articolo->voce_doganale = $articolo->voce_doganale;
+                    $nuovo_articolo->diritti_doganali = $articolo->diritti_doganali;
+                    $nuovo_articolo->val_iva = $articolo->val_iva;
+                    $nuovo_articolo->aliquota_iva = $articolo->aliquota_iva;
+                    $nuovo_articolo->acciaio = $articolo->acciaio;
+                    $nuovo_articolo->acciaio_inox = $articolo->acciaio_inox;
+                    $nuovo_articolo->plastica = $articolo->plastica;
+                    $nuovo_articolo->legno = $articolo->legno;
+                    $nuovo_articolo->bambu = $articolo->bambu;
+                    $nuovo_articolo->vetro = $articolo->vetro;
+                    $nuovo_articolo->ceramica = $articolo->ceramica;
+                    $nuovo_articolo->carta = $articolo->carta;
+                    $nuovo_articolo->pietra = $articolo->pietra;
+                    $nuovo_articolo->posateria = $articolo->posateria;
+                    $nuovo_articolo->attrezzi_cucina = $articolo->attrezzi_cucina;
+                    $nuovo_articolo->richiede_ce = $articolo->richiede_ce;
+                    $nuovo_articolo->richiede_age = $articolo->richiede_age;
+                    $nuovo_articolo->richiede_cites = $articolo->richiede_cites;
+                    $nuovo_articolo->fornitore_id = $articolo->fornitore_id;
+                    $nuovo_articolo->codice_articolo = $articolo->codice_prodotto;
+                    $nuovo_articolo->fornitore_id = $articolo->fornitore_id;
+                    $nuovo_articolo->save();
+                }
             }
-        }
-
-        #scrive gli articoli raggruppandoli per descrizione italiano nella distinta
 
 
-        $elenco_articoli = FatturaData::where('operazione', '=', $this->ordine_id)->get();
-        foreach ($elenco_articoli as $articolo) {
-            $sel_articolo = Articoli::where('descrizione_it', '=', $articolo->it_descrizione)->where('ordine_id','=', $this->ordine_id)->first();
-            #dd($sel_articolo);
-            if($sel_articolo){
-                $pezzi = new Pezzi();
-                $pezzi->ordine_id = $this->ordine_id;
-                $pezzi->articolo_id = $sel_articolo->id; /* $articolo->id; */
-                $pezzi->codice_articolo = $articolo->codice_prodotto;
-                $pezzi->valore = $articolo->prezzo_totale;
-                $pezzi->netto = $articolo->peso_netto;
-                $pezzi->lordo = $articolo->peso_lordo;
-                $pezzi->pezzi = $articolo->pezzi;
-                $pezzi->colli = $articolo->colli;
-                $pezzi->save();
-            } else {
-                $articoli = new Articoli();
-                $articoli->descrizione_uk = $articolo->uk_descrizione;
-                $articoli->descrizione_it = $articolo->it_descrizione;
-                $articoli->ordine_id = $this->ordine_id;
-                $articoli->voce_doganale = $articolo->voce_doganale;
-                $articoli->diritti_doganali = $articolo->diritti_doganali;
-                $articoli->val_iva = $articolo->val_iva;
-                $articoli->aliquota_iva = $articolo->aliquota_iva;
-                $articoli->acciaio = $articolo->acciaio;
-                $articoli->acciaio_inox = $articolo->acciaio_inox;
-                $articoli->plastica = $articolo->plastica;
-                $articoli->legno = $articolo->legno;
-                $articoli->bambu = $articolo->bambu;
-                $articoli->vetro = $articolo->vetro;
-                $articoli->ceramica = $articolo->ceramica;
-                $articoli->carta = $articolo->carta;
-                $articoli->pietra = $articolo->pietra;
-                $articoli->posateria = $articolo->posateria;
-                $articoli->attrezzi_cucina = $articolo->attrezzi_cucina;
-                $articoli->richiede_ce = $articolo->richiede_ce;
-                $articoli->richiede_age = $articolo->richiede_age;
-                $articoli->richiede_cites = $articolo->richiede_cites;
-                $articoli->fornitore_id = $articolo->fornitore_id;
-                $articoli->save();
-                $sel_articolo = Articoli::where('descrizione_it', '=', $articolo->it_descrizione)->where('ordine_id','=', $this->ordine_id)->first();
+
+            #scrive gli articoli raggruppandoli per descrizione italiano nella distinta
+
+
+            $elenco_articoli = FatturaData::where('operazione', '=', $this->ordine_id)->get();
+            foreach ($elenco_articoli as $articolo) {
+                $sel_articolo = Articoli::where('descrizione_it', '=', $articolo->it_descrizione)->where('ordine_id', '=', $this->ordine_id)->first();
                 #dd($sel_articolo);
+                if ($sel_articolo) {
+                    $pezzi = new Pezzi();
+                    $pezzi->ordine_id = $this->ordine_id;
+                    $pezzi->articolo_id = $sel_articolo->id; /* $articolo->id; */
+                    $pezzi->codice_articolo = $articolo->codice_prodotto;
+                    $pezzi->valore = $articolo->prezzo_totale;
+                    $pezzi->netto = $articolo->peso_netto;
+                    $pezzi->lordo = $articolo->peso_lordo;
+                    $pezzi->pezzi = $articolo->pezzi;
+                    $pezzi->colli = $articolo->colli;
+                    $pezzi->save();
+                } else {
+                    $articoli = new Articoli();
+                    $articoli->descrizione_uk = $articolo->uk_descrizione;
+                    $articoli->descrizione_it = $articolo->it_descrizione;
+                    $articoli->ordine_id = $this->ordine_id;
+                    $articoli->voce_doganale = $articolo->voce_doganale;
+                    $articoli->diritti_doganali = $articolo->diritti_doganali;
+                    $articoli->val_iva = $articolo->val_iva;
+                    $articoli->aliquota_iva = $articolo->aliquota_iva;
+                    $articoli->acciaio = $articolo->acciaio;
+                    $articoli->acciaio_inox = $articolo->acciaio_inox;
+                    $articoli->plastica = $articolo->plastica;
+                    $articoli->legno = $articolo->legno;
+                    $articoli->bambu = $articolo->bambu;
+                    $articoli->vetro = $articolo->vetro;
+                    $articoli->ceramica = $articolo->ceramica;
+                    $articoli->carta = $articolo->carta;
+                    $articoli->pietra = $articolo->pietra;
+                    $articoli->posateria = $articolo->posateria;
+                    $articoli->attrezzi_cucina = $articolo->attrezzi_cucina;
+                    $articoli->richiede_ce = $articolo->richiede_ce;
+                    $articoli->richiede_age = $articolo->richiede_age;
+                    $articoli->richiede_cites = $articolo->richiede_cites;
+                    $articoli->fornitore_id = $articolo->fornitore_id;
+                    $articoli->save();
+                    $sel_articolo = Articoli::where('descrizione_it', '=', $articolo->it_descrizione)->where('ordine_id', '=', $this->ordine_id)->first();
+                    #dd($sel_articolo);
 
-                $pezzi = new Pezzi();
-                $pezzi->ordine_id = $this->ordine_id;
-                $pezzi->articolo_id = $sel_articolo->id;
-                $pezzi->codice_articolo = $articolo->codice_prodotto;
-                $pezzi->valore = $articolo->prezzo_totale;
-                $pezzi->netto = $articolo->peso_netto;
-                $pezzi->lordo = $articolo->peso_lordo;
-                $pezzi->pezzi = $articolo->pezzi;
-                $pezzi->colli = $articolo->colli;
-                $pezzi->save();
-
+                    $pezzi = new Pezzi();
+                    $pezzi->ordine_id = $this->ordine_id;
+                    $pezzi->articolo_id = $sel_articolo->id;
+                    $pezzi->codice_articolo = $articolo->codice_prodotto;
+                    $pezzi->valore = $articolo->prezzo_totale;
+                    $pezzi->netto = $articolo->peso_netto;
+                    $pezzi->lordo = $articolo->peso_lordo;
+                    $pezzi->pezzi = $articolo->pezzi;
+                    $pezzi->colli = $articolo->colli;
+                    $pezzi->save();
+                }
             }
 
-        }
-
-        $sel_articoli = Articoli::where('ordine_id', '=', $this->ordine_id)->get();
-        foreach($sel_articoli as $sel_articolo){
-            #dd($sel_articolo);
-            $sel_pezzi = Pezzi::where('articolo_id', '=', $sel_articolo->id)->get();
-            $totale_pezzi = 0;
-            $totale_colli = 0;
-            $totale_lordo = 0.0;
-            $totale_netto = 0.0;
-            $totale_valore = 0.0;
-            foreach($sel_pezzi as $sel_pezzo){
-                $totale_pezzi += $sel_pezzo->pezzi;
-                $totale_colli += $sel_pezzo->colli;
-                $totale_lordo += $sel_pezzo->lordo;
-                $totale_netto += $sel_pezzo->netto;
-                $totale_valore += $sel_pezzo->pezzi;
+            $sel_articoli = Articoli::where('ordine_id', '=', $this->ordine_id)->get();
+            foreach ($sel_articoli as $sel_articolo) {
+                #dd($sel_articolo);
+                $sel_pezzi = Pezzi::where('articolo_id', '=', $sel_articolo->id)->get();
+                $totale_pezzi = 0;
+                $totale_colli = 0;
+                $totale_lordo = 0.0;
+                $totale_netto = 0.0;
+                $totale_valore = 0.0;
+                foreach ($sel_pezzi as $sel_pezzo) {
+                    $totale_pezzi += $sel_pezzo->pezzi;
+                    $totale_colli += $sel_pezzo->colli;
+                    $totale_lordo += $sel_pezzo->lordo;
+                    $totale_netto += $sel_pezzo->netto;
+                    $totale_valore += $sel_pezzo->pezzi;
+                }
+                $sel_articolo->tot_pezzi = $totale_pezzi;
+                $sel_articolo->tot_colli = $totale_colli;
+                $sel_articolo->tot_lordo = $totale_lordo;
+                $sel_articolo->tot_netto = $totale_netto;
+                $sel_articolo->tot_valore = $totale_valore;
+                $sel_articolo->save();
             }
-            $sel_articolo->tot_pezzi = $totale_pezzi;
-            $sel_articolo->tot_colli = $totale_colli;
-            $sel_articolo->tot_lordo = $totale_lordo;
-            $sel_articolo->tot_netto = $totale_netto;
-            $sel_articolo->tot_valore = $totale_valore;
-            $sel_articolo->save();
 
+
+            #cancella la fattura
+            $this->cancella_fattura_sa();
         }
-
-
-        #cancella la fattura
-        $this->cancella_fattura_sa();
-
 
     }
 
