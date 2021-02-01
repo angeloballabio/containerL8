@@ -65,7 +65,7 @@ class StampaCe extends Controller
                 $pdf->Multicell(190, 6, 'Il responsabile '.$destinatario->responsabile);
 
             }
-            $pdf->Output();
+            $pdf->Output('D','Richiesta_CE.pdf');
             exit;
         } else {
             session()->flash('message', 'Nessun articolo richiede la certificazione CE.');

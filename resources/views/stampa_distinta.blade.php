@@ -51,7 +51,7 @@
     </div>
     <div class="container ml-80 mt-3">
         <div class="inline-flex text-center mt-5">
-            <a href="/distinta/pdf/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1">Stampa</a>
+            <a href="/distinta/pdf/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1" targhet="_blank">Stampa</a>
             <a href="/genera_distinta/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1">Termina</a>
         </div>
         <table  style="width: 100%; border-collapse: collapse; border: 1px solid black; ">

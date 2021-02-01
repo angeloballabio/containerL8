@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="w-1/5">
-                <a href="/bollettino/pdf/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1">Stampa</a>
+                <a href="/bollettino/pdf/{{ $operazione->id }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1" target="_blank">Stampa</a>
                 <a href="/operazioni" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-1 mb-1">Termina</a>
             </div>
             <div class="w-2/5">

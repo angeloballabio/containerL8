@@ -646,7 +646,7 @@ class StampaSanitari extends Controller
         //dd($this->plastica);
         if($this->acciaio == 1 or $this->acciaio_inox == 1 or $this->vetro == 1 or $this->posateria == 1 or $this->strumenti_cucina == 1 or $this->plastica == 1 or $this->legno == 1 or $this->bambu == 1 or $this->ceramica == 1 or $this->carta == 1 or $this->pietra == 1)
         {
-            $pdf->Output();
+            $pdf->Output('D','sanitari.pdf');
             exit;
         } else {
             $id = $this->ordine_id;
